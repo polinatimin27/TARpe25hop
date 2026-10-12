@@ -83,7 +83,7 @@ namespace TARge25Shop.ApplicationServices.Services
         }
 
         public async Task<Spaceship> Delete(Guid id)
-        {
+       {
             var result = await _context.Spaceships
                 .FirstOrDefaultAsync(x => x.Id == id);
 
