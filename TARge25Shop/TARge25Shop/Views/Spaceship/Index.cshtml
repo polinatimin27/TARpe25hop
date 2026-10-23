@@ -1,47 +1,170 @@
 ﻿@model IEnumerable<TARge25Shop.Models.Spaceship.SpaceshipIndexViewModel>
 
-<div>
-    <a asp-action="create" asp-controller="spaceship" type="submit" class="btn btn-primary">Create</a>
-</div>
-
 @{
     short rowNumber = 1;
 }
 
+<style>
+    .spaceship-page {
+        background-color: #171519;
+        padding: 25px;
+        border: 1px solid #65404b;
+        border-radius: 10px;
+        min-height: 450px;
+    }
 
-<div class="h1">
-    Spaceships
-</div>
-<form method="get">
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th scope="col">Nr</th>
-                <th scope="col">Name</th>
-                <th scope="col">Type</th>
-                <th scope="col">Built Date</th>
-                <th scope="col">Crew</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var spaceship in Model)
-            {
-                <tr>
-                    <td>@rowNumber</td>
-                    <td>@spaceship.Name</td>
-                    <td>@spaceship.ShipType</td>
-                    <td>@spaceship.CreatedAt</td>
-                    <td>@spaceship.Crew</td>
-                    <td>
-                        <a asp-action="details" asp-controller="spaceship" asp-route-id="@spaceship.Id" class="btn btn-primary">Details</a>
-                        <a asp-action="update" asp-controller="spaceship" asp-route-id="@spaceship.Id" class="btn btn-primary">Update</a>
-                        <a asp-action="delete" asp-controller="spaceship" asp-route-id="@spaceship.Id" class="btn btn-outline-danger">Delete</a>
-                    </td>
-                </tr>
-                rowNumber += 1;
+        .spaceship-page h1 {
+            color: #f0e1ce;
+            margin-bottom: 20px;
+        }
+
+            .spaceship-page h1::before {
+                content: "✦ ";
+                color: #c8a46a;
             }
-        </tbody>
-    </table>
-</form>
 
+        .spaceship-page .create-btn {
+            background-color: #792d48;
+            border: 1px solid #ab6e78;
+            color: white;
+        }
+
+            .spaceship-page .create-btn:hover {
+                background-color: #903b59;
+                color: white;
+            }
+
+        .spaceship-page table {
+            background-color: #252127;
+            border: 1px solid #634454;
+        }
+
+        .spaceship-page thead th {
+            background-color: #472633;
+            color: #e8c994;
+            border-color: #634454;
+            padding: 12px;
+        }
+
+        .spaceship-page tbody td {
+            background-color: #252127;
+            color: #e6d9cf;
+            border-color: #493440;
+            padding: 12px;
+            vertical-align: middle;
+        }
+
+        .spaceship-page tbody tr:nth-child(even) td {
+            background-color: #302630;
+        }
+
+        .spaceship-page tbody tr:hover td {
+            background-color: #3a2935;
+            color: #f0e1ce;
+        }
+
+        .spaceship-page .details-btn {
+            background-color: #793850;
+            border-color: #793850;
+            color: white;
+        }
+
+        .spaceship-page .update-btn {
+            background-color: #725438;
+            border-color: #725438;
+            color: #fff1cf;
+        }
+
+        .spaceship-page .delete-btn {
+            background-color: #4d252c;
+            border-color: #4d252c;
+            color: #ffdce0;
+        }
+
+        .spaceship-page .details-btn:hover {
+            background-color: #914761;
+            color: white;
+        }
+
+        .spaceship-page .update-btn:hover {
+            background-color: #8b6948;
+            color: white;
+        }
+
+        .spaceship-page .delete-btn:hover {
+            background-color: #69323d;
+            color: white;
+        }
+
+        .spaceship-page td:last-child {
+            white-space: nowrap;
+        }
+</style>
+
+<div class="spaceship-page">
+
+    <div>
+        <a asp-action="create"
+               asp-controller="spaceship"
+               type="submit"
+               class="btn create-btn">
+            Create
+        </a>
+    </div>
+
+    <h1>Spaceships</h1>
+
+    <form method="get">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Nr</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Built Date</th>
+                        <th scope="col">Crew</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var spaceship in Model)
+                    {
+                        <tr>
+                            <td>@rowNumber</td>
+                            <td>@spaceship.Name</td>
+                            <td>@spaceship.ShipType</td>
+                            <td>@spaceship.CreatedAt</td>
+                            <td>@spaceship.Crew</td>
+                            <td>
+                                <a asp-action="details"
+                                       asp-controller="spaceship"
+                                       asp-route-id="@spaceship.Id"
+                                       class="btn details-btn">
+                                    Details
+                                </a>
+
+                                <a asp-action="update"
+                                       asp-controller="spaceship"
+                                       asp-route-id="@spaceship.Id"
+                                       class="btn update-btn">
+                                    Update
+                                </a>
+
+                                <a asp-action="delete"
+                                       asp-controller="spaceship"
+                                       asp-route-id="@spaceship.Id"
+                                       class="btn delete-btn">
+                                    Delete
+                                </a>
+                            </td>
+                        </tr>
+
+                        rowNumber += 1;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </form>
+</div>

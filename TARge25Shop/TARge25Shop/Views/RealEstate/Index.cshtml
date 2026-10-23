@@ -1,46 +1,170 @@
 ﻿@model IEnumerable<TARge25Shop.Models.RealEstate.RealEstateIndexViewModel>
 
-<div>
-    <a asp-action="create" asp-controller="realEstate" type="submit" class="btn btn-primary">Create</a>
-</div>
-
 @{
     short rowNumber = 1;
 }
 
+<style>
+    .realestate-page {
+        background-color: #171519;
+        padding: 25px;
+        border: 1px solid #65404b;
+        border-radius: 10px;
+        min-height: 450px;
+    }
 
-<div class="h1">
-    RealEstate
-</div>
-<form method="get">
-    <table class="table table-hover">
-        <thead>
-            <tr>
-                <th scope="col">Nr</th>
-                <th scope="col">Area</th>
-                <th scope="col">Location</th>
-                <th scope="col">Room Nr</th>
-                <th scope="col">Building Type</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var realEstate in Model)
-            {
-                <tr>
-                    <td>@rowNumber</td>
-                    <td>@realEstate.Area</td>
-                    <td>@realEstate.Location</td>
-                    <td>@realEstate.RoomNumber</td>
-                    <td>@realEstate.BuildingType</td>
-                    <td>
-                        <a asp-action="details" asp-controller="realEstate" asp-route-id="@realEstate.Id" class="btn btn-primary">Details</a>
-                        <a asp-action="update" asp-controller="realEstate" asp-route-id="@realEstate.Id" class="btn btn-primary">Update</a>
-                        <a asp-action="delete" asp-controller="realEstate" asp-route-id="@realEstate.Id" class="btn btn-outline-danger">Delete</a>
-                    </td>
-                </tr>
-                rowNumber += 1;
+        .realestate-page h1 {
+            color: #f0e1ce;
+            margin-bottom: 20px;
+        }
+
+            .realestate-page h1::before {
+                content: "✦ ";
+                color: #c8a46a;
             }
-        </tbody>
-    </table>
-</form>
+
+        .realestate-page .create-btn {
+            background-color: #792d48;
+            border: 1px solid #ab6e78;
+            color: white;
+        }
+
+            .realestate-page .create-btn:hover {
+                background-color: #903b59;
+                color: white;
+            }
+
+        .realestate-page table {
+            background-color: #252127;
+            border: 1px solid #634454;
+        }
+
+        .realestate-page thead th {
+            background-color: #472633;
+            color: #e8c994;
+            border-color: #634454;
+            padding: 12px;
+        }
+
+        .realestate-page tbody td {
+            background-color: #252127;
+            color: #e6d9cf;
+            border-color: #493440;
+            padding: 12px;
+            vertical-align: middle;
+        }
+
+        .realestate-page tbody tr:nth-child(even) td {
+            background-color: #302630;
+        }
+
+        .realestate-page tbody tr:hover td {
+            background-color: #3a2935;
+            color: #f0e1ce;
+        }
+
+        .realestate-page .details-btn {
+            background-color: #793850;
+            border-color: #793850;
+            color: white;
+        }
+
+        .realestate-page .update-btn {
+            background-color: #725438;
+            border-color: #725438;
+            color: #fff1cf;
+        }
+
+        .realestate-page .delete-btn {
+            background-color: #4d252c;
+            border-color: #4d252c;
+            color: #ffdce0;
+        }
+
+        .realestate-page .details-btn:hover {
+            background-color: #914761;
+            color: white;
+        }
+
+        .realestate-page .update-btn:hover {
+            background-color: #8b6948;
+            color: white;
+        }
+
+        .realestate-page .delete-btn:hover {
+            background-color: #69323d;
+            color: white;
+        }
+
+        .realestate-page td:last-child {
+            white-space: nowrap;
+        }
+</style>
+
+<div class="realestate-page">
+
+    <div>
+        <a asp-action="create"
+               asp-controller="realEstate"
+               type="submit"
+               class="btn create-btn">
+            Create
+        </a>
+    </div>
+
+    <h1>RealEstate</h1>
+
+    <form method="get">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Nr</th>
+                        <th scope="col">Area</th>
+                        <th scope="col">Location</th>
+                        <th scope="col">Room Nr</th>
+                        <th scope="col">Building Type</th>
+                        <th scope="col"></th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var realEstate in Model)
+                    {
+                        <tr>
+                            <td>@rowNumber</td>
+                            <td>@realEstate.Area</td>
+                            <td>@realEstate.Location</td>
+                            <td>@realEstate.RoomNumber</td>
+                            <td>@realEstate.BuildingType</td>
+                            <td>
+                                <a asp-action="details"
+                                       asp-controller="realEstate"
+                                       asp-route-id="@realEstate.Id"
+                                       class="btn details-btn">
+                                    Details
+                                </a>
+
+                                <a asp-action="update"
+                                       asp-controller="realEstate"
+                                       asp-route-id="@realEstate.Id"
+                                       class="btn update-btn">
+                                    Update
+                                </a>
+
+                                <a asp-action="delete"
+                                       asp-controller="realEstate"
+                                       asp-route-id="@realEstate.Id"
+                                       class="btn delete-btn">
+                                    Delete
+                                </a>
+                            </td>
+                        </tr>
+
+                        rowNumber += 1;
+                    }
+                </tbody>
+            </table>
+        </div>
+    </form>
+</div>

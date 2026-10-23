@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using TARge25Shop.Core.Domain;
 using TARge25Shop.Core.Dto;
 using TARge25Shop.Core.ServiceInterface;
 using TARge25Shop.Data;
-
 
 namespace TARge25Shop.ApplicationServices.Services
 {
@@ -22,7 +23,6 @@ namespace TARge25Shop.ApplicationServices.Services
             _webHost = webHost;
             _context = context;
         }
-
 
         public void FilesToApi(SpaceshipDto dto, Spaceship domain)
         {
@@ -48,7 +48,7 @@ namespace TARge25Shop.ApplicationServices.Services
                     {
                         file.CopyTo(fileStream);
 
-                        //tuleb Domaini teha class FileToApi, 
+                        //tuleb Domaini teha class FileToApi,
                         //kus on muutujad Id, ExistingFilePath ja SpaceshipId
                         FileToApi path = new FileToApi
                         {
@@ -112,6 +112,98 @@ namespace TARge25Shop.ApplicationServices.Services
             }
 
             return null;
+        }
+
+        // Kindergarten piltide lisamine
+        public async Task SaveKindergartenImagesAsync(
+            IEnumerable<IFormFile> files,
+            Guid kindergartenId)
+        {
+            string uploadsFolder = Path.Combine(
+                _webHost.ContentRootPath,
+                "wwwroot",
+                "multipleFileUpload");
+
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            foreach (var file in files)
+            {
+                if (file.Length == 0)
+                {
+                    continue;
+                }
+
+                string extension = Path.GetExtension(file.FileName)
+                    .ToLowerInvariant();
+
+                if (extension != ".jpg" &&
+                    extension != ".jpeg" &&
+                    extension != ".png" &&
+                    extension != ".gif" &&
+                    extension != ".webp")
+                {
+                    continue;
+                }
+
+                if (file.Length > 5 * 1024 * 1024)
+                {
+                    continue;
+                }
+
+                string uniqueFileName = Guid.NewGuid().ToString()
+                    + extension;
+
+                string filePath = Path.Combine(
+                    uploadsFolder,
+                    uniqueFileName);
+
+                using (var fileStream = new FileStream(
+                    filePath, FileMode.Create))
+                {
+                    await file.CopyToAsync(fileStream);
+                }
+
+                FileToApi path = new FileToApi
+                {
+                    Id = Guid.NewGuid(),
+                    ExistingFilePath = uniqueFileName,
+                    KindergartenId = kindergartenId
+                };
+
+                await _context.FileToApis.AddAsync(path);
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        // Kindergarten kõikide piltide kustutamine
+        public async Task RemoveKindergartenImagesAsync(
+            Guid kindergartenId)
+        {
+            var images = await _context.FileToApis
+                .Where(x => x.KindergartenId == kindergartenId)
+                .ToListAsync();
+
+            foreach (var image in images)
+            {
+                string filePath = Path.Combine(
+                    _webHost.ContentRootPath,
+                    "wwwroot",
+                    "multipleFileUpload",
+                    image.ExistingFilePath ?? "");
+
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+
+                _context.FileToApis.Remove(image);
+            }
+
+            await _context.SaveChangesAsync();
         }
     }
 }

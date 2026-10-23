@@ -4,34 +4,158 @@
     ViewData["Title"] = "Kindergarten details";
 }
 
-<h1>Kindergarten details</h1>
+<style>
+    .kindergarten-page {
+        background-color: #171519;
+        padding: 25px;
+        border: 1px solid #65404b;
+        border-radius: 10px;
+        min-height: 450px;
+    }
 
-<dl class="row">
-    <dt class="col-sm-3">Group name</dt>
-    <dd class="col-sm-9">@Model.GroupName</dd>
+        .kindergarten-page h1,
+        .kindergarten-page h3 {
+            color: #f0e1ce;
+            margin-bottom: 20px;
+        }
 
-    <dt class="col-sm-3">Children count</dt>
-    <dd class="col-sm-9">@Model.ChildrenCount</dd>
+            .kindergarten-page h1::before {
+                content: "✦ ";
+                color: #c8a46a;
+            }
 
-    <dt class="col-sm-3">Kindergarten name</dt>
-    <dd class="col-sm-9">@Model.KindergartenName</dd>
+        .kindergarten-page dt {
+            color: #e8c994;
+        }
 
-    <dt class="col-sm-3">Teacher name</dt>
-    <dd class="col-sm-9">@Model.TeacherName</dd>
+        .kindergarten-page dd {
+            color: #e6d9cf;
+        }
 
-    <dt class="col-sm-3">Created at</dt>
-    <dd class="col-sm-9">@Model.CreatedAt</dd>
+        .kindergarten-page .kindergarten-image {
+            max-width: 250px;
+            border: 3px solid #65404b;
+            border-radius: 8px;
+        }
 
-    <dt class="col-sm-3">Updated at</dt>
-    <dd class="col-sm-9">@Model.UpdatedAt</dd>
-</dl>
+        .kindergarten-page .delete-image-btn {
+            background-color: #793850;
+            border-color: #793850;
+            color: white;
+        }
 
-<a asp-action="Edit"
-   asp-route-id="@Model.Id"
-   class="btn btn-warning">
-    Edit
-</a>
+        .kindergarten-page .delete-all-btn {
+            background-color: #4d252c;
+            border-color: #75404b;
+            color: #ffdce0;
+        }
 
-<a asp-action="Index" class="btn btn-secondary">
-    Back
-</a>
+        .kindergarten-page .edit-btn {
+            background-color: #725438;
+            border-color: #725438;
+            color: #fff1cf;
+        }
+
+        .kindergarten-page .back-btn {
+            background-color: #792d48;
+            border-color: #ab6e78;
+            color: white;
+        }
+
+        .kindergarten-page .btn:hover {
+            filter: brightness(1.2);
+            color: white;
+        }
+</style>
+
+<div class="kindergarten-page">
+
+    <h1>Kindergarten details</h1>
+
+    <dl class="row">
+        <dt class="col-sm-3">Group name</dt>
+        <dd class="col-sm-9">@Model.GroupName</dd>
+
+        <dt class="col-sm-3">Children count</dt>
+        <dd class="col-sm-9">@Model.ChildrenCount</dd>
+
+        <dt class="col-sm-3">Kindergarten name</dt>
+        <dd class="col-sm-9">@Model.KindergartenName</dd>
+
+        <dt class="col-sm-3">Teacher name</dt>
+        <dd class="col-sm-9">@Model.TeacherName</dd>
+
+        <dt class="col-sm-3">Created at</dt>
+        <dd class="col-sm-9">@Model.CreatedAt</dd>
+
+        <dt class="col-sm-3">Updated at</dt>
+        <dd class="col-sm-9">@Model.UpdatedAt</dd>
+    </dl>
+
+    <h3>Images</h3>
+
+    @if (Model.Images != null && Model.Images.Count > 0)
+    {
+        <div class="row">
+            @foreach (var image in Model.Images)
+            {
+                <div class="col-md-3 mb-3">
+                    <img src="@Url.Content("~/multipleFileUpload/" + image.FilePath)"
+                         class="img-fluid kindergarten-image"
+                         alt="Kindergarten image" />
+
+                    <form asp-action="RemoveImage"
+                          asp-controller="Kindergarten"
+                          method="post"
+                          class="mt-2">
+
+                        <input type="hidden"
+                               name="id"
+                               value="@Model.Id" />
+
+                        <input type="hidden"
+                               name="imageId"
+                               value="@image.Id" />
+
+                        <button type="submit"
+                                class="btn btn-sm delete-image-btn">
+                            Delete image
+                        </button>
+                    </form>
+                </div>
+            }
+        </div>
+
+        <form asp-action="RemoveAllImages"
+              asp-controller="Kindergarten"
+              method="post"
+              class="mb-3">
+
+            <input type="hidden"
+                   name="id"
+                   value="@Model.Id" />
+
+            <button type="submit" class="btn delete-all-btn">
+                Delete all images
+            </button>
+        </form>
+    }
+    else
+    {
+        <p style="color: #e6d9cf;">No images.</p>
+    }
+
+    <a asp-action="Edit"
+           asp-controller="Kindergarten"
+           asp-route-id="@Model.Id"
+           class="btn edit-btn">
+        Edit
+    </a>
+
+    <a asp-action="Index"
+           asp-controller="Kindergarten"
+           class="btn back-btn">
+        Back
+    </a>
+
+</div>

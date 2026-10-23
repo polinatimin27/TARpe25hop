@@ -1,67 +1,140 @@
 ﻿@model TARge25Shop.Models.Spaceship.SpaceshipDeleteViewModel
 
-<h1>Delete</h1>
-
-<div>
-    <h4>Spaceship</h4>
-    <hr />
-    <dl class="row">
-        <div class="form-group row">
-            <label asp-for="Id" class="col-sm-2 col-form-label"></label>
-            @Html.DisplayFor(model => model.Id)
-        </div>
-    </dl>
-
-    <dl class="row">
-        <div class="form-group row">
-            <label asp-for="Name" class="col-sm-2 col-form-label"></label>
-            @Html.DisplayFor(model => model.Name)
-        </div>
-    </dl>
-
-    <dl class="row">
-        <div class="form-group row">
-            <label asp-for="ShipType" class="col-sm-2 col-form-label"></label>
-            @Html.DisplayFor(model => model.ShipType)
-        </div>
-    </dl>
-
-    <dl class="row">
-        <div class="form-group row">
-            <label asp-for="Crew" class="col-sm-2 col-form-label"></label>
-            @Html.DisplayFor(model => model.Crew)
-        </div>
-    </dl>
-
-    <dl class="row">
-        <div class="form-group row">
-            <label asp-for="EnginePower" class="col-sm-2 col-form-label"></label>
-            @Html.DisplayFor(model => model.EnginePower)
-        </div>
-    </dl>
-
-    <dl class="row">
-        <div class="form-group row">
-            <label asp-for="CreatedAt" class="col-sm-2 col-form-label"></label>
-            @Html.DisplayFor(model => model.CreatedAt)
-        </div>
-    </dl>
-
-    <dl class="row">
-        <div class="form-group row">
-            <label asp-for="UpdatedAt" class="col-sm-2 col-form-label"></label>
-            @Html.DisplayFor(model => model.UpdatedAt)
-        </div>
-    </dl>
-
-    @foreach (var images in Model.Image)
-    {
-        <partial name="_Images" model="images" />
+<style>
+    .spaceship-page {
+        background-color: #171519;
+        padding: 25px;
+        border: 1px solid #65404b;
+        border-radius: 10px;
+        min-height: 450px;
     }
 
-    <form asp-action="DeleteConfirmation">
-        <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" />
-        <a asp-action="Index" asp-controller="spaceship" class="btn btn-success">Back</a>
-    </form>
+        .spaceship-page h1 {
+            color: #f0e1ce;
+            margin-bottom: 20px;
+        }
+
+            .spaceship-page h1::before {
+                content: "✦ ";
+                color: #c8a46a;
+            }
+
+        .spaceship-page h4 {
+            color: #e8c994;
+            margin-bottom: 15px;
+        }
+
+        .spaceship-page hr {
+            border-color: #65404b;
+            opacity: 1;
+        }
+
+        .spaceship-page label {
+            color: #e8c994;
+        }
+
+        .spaceship-page .form-group {
+            color: #e6d9cf;
+            margin-bottom: 12px;
+        }
+
+        .spaceship-page .delete-btn {
+            background-color: #4d252c;
+            border: 1px solid #75404b;
+            color: #ffdce0;
+        }
+
+            .spaceship-page .delete-btn:hover {
+                background-color: #69323d;
+                color: white;
+            }
+
+        .spaceship-page .back-btn {
+            background-color: #792d48;
+            border: 1px solid #ab6e78;
+            color: white;
+        }
+
+            .spaceship-page .back-btn:hover {
+                background-color: #903b59;
+                color: white;
+            }
+</style>
+
+<div class="spaceship-page">
+
+    <h1>Delete</h1>
+
+    <div>
+        <h4>Spaceship</h4>
+        <hr />
+
+        <dl class="row">
+            <div class="form-group row">
+                <label asp-for="Id" class="col-sm-2 col-form-label"></label>
+                @Html.DisplayFor(model => model.Id)
+            </div>
+        </dl>
+
+        <dl class="row">
+            <div class="form-group row">
+                <label asp-for="Name" class="col-sm-2 col-form-label"></label>
+                @Html.DisplayFor(model => model.Name)
+            </div>
+        </dl>
+
+        <dl class="row">
+            <div class="form-group row">
+                <label asp-for="ShipType" class="col-sm-2 col-form-label"></label>
+                @Html.DisplayFor(model => model.ShipType)
+            </div>
+        </dl>
+
+        <dl class="row">
+            <div class="form-group row">
+                <label asp-for="Crew" class="col-sm-2 col-form-label"></label>
+                @Html.DisplayFor(model => model.Crew)
+            </div>
+        </dl>
+
+        <dl class="row">
+            <div class="form-group row">
+                <label asp-for="EnginePower" class="col-sm-2 col-form-label"></label>
+                @Html.DisplayFor(model => model.EnginePower)
+            </div>
+        </dl>
+
+        <dl class="row">
+            <div class="form-group row">
+                <label asp-for="CreatedAt" class="col-sm-2 col-form-label"></label>
+                @Html.DisplayFor(model => model.CreatedAt)
+            </div>
+        </dl>
+
+        <dl class="row">
+            <div class="form-group row">
+                <label asp-for="UpdatedAt" class="col-sm-2 col-form-label"></label>
+                @Html.DisplayFor(model => model.UpdatedAt)
+            </div>
+        </dl>
+
+        @foreach (var images in Model.Image)
+        {
+            <partial name="_Images" model="images" />
+        }
+
+        <form asp-action="DeleteConfirmation">
+            <input type="hidden" asp-for="Id" />
+
+            <input type="submit"
+                   value="Delete"
+                   class="btn delete-btn" />
+
+            <a asp-action="Index"
+                   asp-controller="spaceship"
+                   class="btn back-btn">
+                Back
+            </a>
+        </form>
+    </div>
 </div>

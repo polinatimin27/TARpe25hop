@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using TARge25Shop.Core.Dto;
 using TARge25Shop.Core.ServiceInterface;
@@ -11,13 +12,16 @@ namespace TARge25Shop.Controllers
     {
         private readonly TARge25ShopContext _context;
         private readonly IKindergartenServices _kindergartenServices;
+        private readonly IFileServices _fileServices;
 
         public KindergartenController(
             TARge25ShopContext context,
-            IKindergartenServices kindergartenServices)
+            IKindergartenServices kindergartenServices,
+            IFileServices fileServices)
         {
             _context = context;
             _kindergartenServices = kindergartenServices;
+            _fileServices = fileServices;
         }
 
         [HttpGet]
@@ -46,6 +50,7 @@ namespace TARge25Shop.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> CreateUpdate(
             KindergartenCreateUpdateViewModel viewModel)
         {
@@ -67,11 +72,29 @@ namespace TARge25Shop.Controllers
 
             if (viewModel.Id == null)
             {
-                await _kindergartenServices.Create(dto);
+                var kindergarten =
+                    await _kindergartenServices.Create(dto);
+
+                if (viewModel.Files != null &&
+                    viewModel.Files.Count > 0 &&
+                    kindergarten.Id.HasValue)
+                {
+                    await _fileServices.SaveKindergartenImagesAsync(
+                        viewModel.Files,
+                        kindergarten.Id.Value);
+                }
             }
             else
             {
                 await _kindergartenServices.Update(dto);
+
+                if (viewModel.Files != null &&
+                    viewModel.Files.Count > 0)
+                {
+                    await _fileServices.SaveKindergartenImagesAsync(
+                        viewModel.Files,
+                        viewModel.Id.Value);
+                }
             }
 
             return RedirectToAction(nameof(Index));
@@ -103,6 +126,15 @@ namespace TARge25Shop.Controllers
             var kindergarten =
                 await _kindergartenServices.DetailAsync(id);
 
+              var images = await _context.FileToApis
+                .Where(x => x.KindergartenId == id)
+                .Select(x => new KindergartenImageViewModel
+                {
+                    Id = x.Id,
+                    FilePath = x.ExistingFilePath
+                })
+                .ToListAsync();
+
             var viewModel = new KindergartenDetailsViewModel
             {
                 Id = kindergarten.Id,
@@ -111,10 +143,55 @@ namespace TARge25Shop.Controllers
                 KindergartenName = kindergarten.KindergartenName,
                 TeacherName = kindergarten.TeacherName,
                 CreatedAt = kindergarten.CreatedAt,
-                UpdatedAt = kindergarten.UpdatedAt
+                UpdatedAt = kindergarten.UpdatedAt,
+                Images = images
             };
 
             return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveImage(
+            Guid id, Guid imageId)
+        {
+            var image = await _context.FileToApis
+                .FirstOrDefaultAsync(x =>
+                    x.Id == imageId &&
+                    x.KindergartenId == id);
+
+            if (image == null)
+            {
+                return NotFound();
+            }
+
+            var dto = new FileToApiDto
+            {
+                Id = imageId
+            };
+
+            await _fileServices.RemoveImageFromApi(dto);
+
+            return RedirectToAction(nameof(Details),
+                new { id });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveAllImages(Guid id)
+        {
+            var kindergarten = await _context.Kindergartens
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (kindergarten == null)
+            {
+                return NotFound();
+            }
+
+            await _fileServices.RemoveKindergartenImagesAsync(id);
+
+            return RedirectToAction(nameof(Details),
+                new { id });
         }
 
         [HttpGet]
@@ -138,8 +215,10 @@ namespace TARge25Shop.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmation(Guid id)
         {
+            await _fileServices.RemoveKindergartenImagesAsync(id);
             await _kindergartenServices.Delete(id);
 
             return RedirectToAction(nameof(Index));

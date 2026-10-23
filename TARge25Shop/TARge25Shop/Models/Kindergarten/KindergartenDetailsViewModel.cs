@@ -1,4 +1,5 @@
-﻿namespace TARge25Shop.Models.Kindergarten
+﻿
+namespace TARge25Shop.Models.Kindergarten
 {
     public class KindergartenDetailsViewModel
     {
@@ -15,5 +16,7 @@
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }
+
+        public List<KindergartenImageViewModel> Images { get; set; } = new();
     }
 }

@@ -6,58 +6,154 @@
         : "Edit kindergarten";
 }
 
-<h1>@ViewData["Title"]</h1>
+<style>
+    .kindergarten-page {
+        background-color: #171519;
+        padding: 25px;
+        border: 1px solid #65404b;
+        border-radius: 10px;
+        min-height: 450px;
+    }
 
-<form asp-action="CreateUpdate" method="post">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        .kindergarten-page h1 {
+            color: #f0e1ce;
+            margin-bottom: 20px;
+        }
 
-    <input asp-for="Id" type="hidden" />
-    <input asp-for="CreatedAt" type="hidden" />
-    <input asp-for="UpdatedAt" type="hidden" />
+            .kindergarten-page h1::before {
+                content: "✦ ";
+                color: #c8a46a;
+            }
 
-    <div class="form-group mb-3">
-        <label asp-for="GroupName" class="control-label">
-            Group name
-        </label>
-        <input asp-for="GroupName" class="form-control" />
-        <span asp-validation-for="GroupName" class="text-danger"></span>
-    </div>
+        .kindergarten-page label {
+            color: #e8c994;
+            font-weight: 500;
+        }
 
-    <div class="form-group mb-3">
-        <label asp-for="ChildrenCount" class="control-label">
-            Children count
-        </label>
-        <input asp-for="ChildrenCount"
-               class="form-control"
-               type="number"
-               min="0" />
-        <span asp-validation-for="ChildrenCount"
-              class="text-danger"></span>
-    </div>
+        .kindergarten-page .form-control {
+            background-color: #252127;
+            border: 1px solid #65404b;
+            color: #f0e1ce;
+        }
 
-    <div class="form-group mb-3">
-        <label asp-for="KindergartenName" class="control-label">
-            Kindergarten name
-        </label>
-        <input asp-for="KindergartenName" class="form-control" />
-        <span asp-validation-for="KindergartenName"
-              class="text-danger"></span>
-    </div>
+            .kindergarten-page .form-control:focus {
+                background-color: #302630;
+                border-color: #c8a46a;
+                color: white;
+                box-shadow: 0 0 0 2px #65404b;
+            }
 
-    <div class="form-group mb-3">
-        <label asp-for="TeacherName" class="control-label">
-            Teacher name
-        </label>
-        <input asp-for="TeacherName" class="form-control" />
-        <span asp-validation-for="TeacherName"
-              class="text-danger"></span>
-    </div>
+            .kindergarten-page .form-control::file-selector-button {
+                background-color: #472633;
+                color: #f0e1ce;
+                border: none;
+            }
 
-    <button type="submit" class="btn btn-success">
-        @(Model.Id == null ? "Create" : "Save")
-    </button>
+                .kindergarten-page .form-control::file-selector-button:hover {
+                    background-color: #65404b;
+                    color: white;
+                }
 
-    <a asp-action="Index" class="btn btn-secondary">
-        Back
-    </a>
-</form>
+        .kindergarten-page .save-btn {
+            background-color: #792d48;
+            border: 1px solid #ab6e78;
+            color: white;
+        }
+
+            .kindergarten-page .save-btn:hover {
+                background-color: #903b59;
+                color: white;
+            }
+
+        .kindergarten-page .back-btn {
+            background-color: #725438;
+            border-color: #725438;
+            color: #fff1cf;
+        }
+
+            .kindergarten-page .back-btn:hover {
+                background-color: #8b6948;
+                color: white;
+            }
+</style>
+
+<div class="kindergarten-page">
+
+    <h1>@ViewData["Title"]</h1>
+
+    <form asp-action="CreateUpdate"
+          asp-controller="Kindergarten"
+          method="post"
+          enctype="multipart/form-data">
+
+        <div asp-validation-summary="ModelOnly"
+             class="text-danger"></div>
+
+        <input asp-for="Id" type="hidden" />
+        <input asp-for="CreatedAt" type="hidden" />
+        <input asp-for="UpdatedAt" type="hidden" />
+
+        <div class="form-group mb-3">
+            <label asp-for="GroupName" class="control-label">
+                Group name
+            </label>
+            <input asp-for="GroupName" class="form-control" />
+            <span asp-validation-for="GroupName"
+                  class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="ChildrenCount" class="control-label">
+                Children count
+            </label>
+            <input asp-for="ChildrenCount"
+                   class="form-control"
+                   type="number"
+                   min="0" />
+            <span asp-validation-for="ChildrenCount"
+                  class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="KindergartenName" class="control-label">
+                Kindergarten name
+            </label>
+            <input asp-for="KindergartenName"
+                   class="form-control" />
+            <span asp-validation-for="KindergartenName"
+                  class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="TeacherName" class="control-label">
+                Teacher name
+            </label>
+            <input asp-for="TeacherName"
+                   class="form-control" />
+            <span asp-validation-for="TeacherName"
+                  class="text-danger"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label asp-for="Files" class="control-label">
+                Images
+            </label>
+            <input asp-for="Files"
+                   type="file"
+                   multiple
+                   accept="image/*"
+                   class="form-control" />
+        </div>
+
+        <button type="submit" class="btn save-btn">
+            @(Model.Id == null ? "Create" : "Save")
+        </button>
+
+        <a asp-action="Index"
+               asp-controller="Kindergarten"
+               class="btn back-btn">
+            Back
+        </a>
+
+    </form>
+</div>
