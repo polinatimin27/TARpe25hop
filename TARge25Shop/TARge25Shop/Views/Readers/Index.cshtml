@@ -1,0 +1,29 @@
+﻿@model List<TARge25Shop.Core.Domain.Reader>
+
+@{
+    ViewData["Title"] = "Readers";
+}
+
+<h1>Readers</h1>
+
+<a asp-action="Create" class="btn btn-primary mb-3">
+    Add Reader
+</a>
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var reader in Model)
+        {
+            <tr>
+                <td>@reader.FullName</td>
+                <td>@reader.Email</td>
+            </tr>
+        }
+    </tbody>
+</table>

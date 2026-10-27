@@ -1,0 +1,30 @@
+﻿@model TARge25Shop.Core.Dto.BookDto
+
+@{
+    ViewData["Title"] = "Add Book";
+}
+
+<h1>Add Book</h1>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label>Title</label>
+        <input asp-for="Title" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label>Author</label>
+        <input asp-for="Author" class="form-control" required />
+    </div>
+
+    <div class="mb-3">
+        <label>Published Year</label>
+        <input asp-for="PublishedYear" class="form-control"
+               type="number" required />
+    </div>
+
+    <button type="submit" class="btn btn-success">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Back</a>
+</form>

@@ -1,0 +1,48 @@
+﻿@using TARge25Shop.Core.Domain
+
+@{
+    ViewData["Title"] = "Add Loan";
+
+    var books = ViewBag.Books as List<Book> ?? new List<Book>();
+    var readers = ViewBag.Readers as List<Reader> ?? new List<Reader>();
+}
+
+<h1>Add Loan</h1>
+
+<form asp-action="Create" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label>Book</label>
+        <select name="bookId" class="form-select" required>
+            <option value="">Select Book</option>
+            @foreach (var book in books)
+            {
+                <option value="@book.Id">
+                    @book.Title - @book.Author
+                </option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>Reader</label>
+        <select name="readerId" class="form-select" required>
+            <option value="">Select Reader</option>
+            @foreach (var reader in readers)
+            {
+                <option value="@reader.Id">
+                    @reader.FullName
+                </option>
+            }
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        Save
+    </button>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        Back
+    </a>
+</form>

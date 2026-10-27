@@ -1,3 +1,4 @@
+
 using Microsoft.EntityFrameworkCore;
 using TARge25Shop.ApplicationServices.Services;
 using TARge25Shop.Core.ServiceInterface;
@@ -18,6 +19,12 @@ namespace TARge25Shop
             builder.Services.AddScoped<IRealEstateServices, RealEstateServices>();
             builder.Services.AddScoped<IKindergartenServices, KindergartenServices>();
 
+            // Raamatukogu services
+            builder.Services.AddScoped<IBookServices, BookServices>();
+            builder.Services.AddScoped<IReaderServices, ReaderServices>();
+            builder.Services.AddScoped<ILoanServices, LoanServices>();
+
+            // Database connection from appsettings.json
             builder.Services.AddDbContext<TARge25ShopContext>(options =>
                 options.UseSqlServer(
                     builder.Configuration.GetConnectionString("DefaultConnection")));
