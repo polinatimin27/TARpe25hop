@@ -76,7 +76,6 @@
             <div class="container-fluid">
 
                 <a class="navbar-brand"
-                       asp-area=""
                        asp-controller="Home"
                        asp-action="Index">
                     TARge25Shop
@@ -137,25 +136,9 @@
 
                         <li class="nav-item">
                             <a class="nav-link"
-                                   asp-controller="Books"
+                                   asp-controller="Library"
                                    asp-action="Index">
-                                Books
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                                   asp-controller="Readers"
-                                   asp-action="Index">
-                                Readers
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                                   asp-controller="Loans"
-                                   asp-action="Index">
-                                Loans
+                                Library
                             </a>
                         </li>
 
@@ -174,8 +157,7 @@
     <footer class="main-footer footer">
         <div class="container">
             &copy; 2026 - TARge25Shop -
-            <a asp-area=""
-                   asp-controller="Home"
+            <a asp-controller="Home"
                    asp-action="Privacy">
                 Privacy
             </a>
