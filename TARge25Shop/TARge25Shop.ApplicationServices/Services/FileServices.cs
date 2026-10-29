@@ -1,5 +1,4 @@
-﻿
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http; // Vajalik IFormFile jaoks
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using TARge25Shop.Core.Domain;
@@ -11,15 +10,20 @@ namespace TARge25Shop.ApplicationServices.Services
 {
     public class FileServices : IFileServices
     {
+        // _webHost aitab leida failide kausta
         private readonly IHostEnvironment _webHost;
+
+        // _context on vajalik andmebaasiga töötamiseks
         private readonly TARge25ShopContext _context;
 
+        // Konstruktor saab webHosti ja contexti
         public FileServices
             (
                 IHostEnvironment webHost,
                 TARge25ShopContext context
             )
         {
+            // Salvestab need, et neid saaks selles klassis kasutada
             _webHost = webHost;
             _context = context;
         }
@@ -41,6 +45,7 @@ namespace TARge25Shop.ApplicationServices.Services
                     //tuleb teha muutuja, kus on failide asukoht e kuhu hakatakse salvestama
                     string uploadsFolder = Path.Combine(_webHost.ContentRootPath, "wwwroot", "multipleFileUpload");
                     string uniqueFileName = Guid.NewGuid().ToString() + "_" + file.FileName;
+
                     //tuleb kaks ülevalpool olevat muutujat kombineerida üheks
                     string filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
@@ -83,14 +88,15 @@ namespace TARge25Shop.ApplicationServices.Services
             _context.FileToApis.Remove(imageId);
             await _context.SaveChangesAsync();
 
+            // Pärast kustutamist tagastab meetod nulli
             return null;
         }
 
         //<List<FileToApi>> lisati sellepärast, et faile on mitu, mida kustutada
         public async Task<List<FileToApi>> RemoveImagesFromApi(FileToApiDto[] dtos)
         {
-            //kui on mitu pilti, siis itereerib need ükshavaal läbi
-            //ja kustutab need ära
+            // dtos sisaldab pilte, mida soovin kustutada
+            // foreach võtab need ükshaaval läbi
             foreach (var dto in dtos)
             {
                 //kui soovin kustutada faili, siis pean läbi Id pildi ülesse otsima
@@ -119,26 +125,37 @@ namespace TARge25Shop.ApplicationServices.Services
             IEnumerable<IFormFile> files,
             Guid kindergartenId)
         {
+            // files on üles laaditud failid
+            // kindergartenId näitab, millisele lasteaiale pildid kuuluvad
+
+            // Siin on kaust, kuhu pildid salvestatakse
             string uploadsFolder = Path.Combine(
                 _webHost.ContentRootPath,
                 "wwwroot",
                 "multipleFileUpload");
 
+            // Kui kausta ei ole, siis loob selle
             if (!Directory.Exists(uploadsFolder))
             {
                 Directory.CreateDirectory(uploadsFolder);
             }
 
+            // Käib kõik failid ükshaaval läbi
             foreach (var file in files)
             {
+                // Kui fail on tühi, jätab selle vahele
                 if (file.Length == 0)
                 {
                     continue;
                 }
 
+                // Võtab faili laiendi, näiteks .jpg või .png
+                // Muudab laiendi väikesteks tähtedeks
                 string extension = Path.GetExtension(file.FileName)
                     .ToLowerInvariant();
 
+                // Kontrollib, kas faili laiend on lubatud
+                // Kui ei ole, jätab faili vahele
                 if (extension != ".jpg" &&
                     extension != ".jpeg" &&
                     extension != ".png" &&
@@ -148,34 +165,42 @@ namespace TARge25Shop.ApplicationServices.Services
                     continue;
                 }
 
+                // Kui fail on suurem kui 5 MB, jätab selle vahele
                 if (file.Length > 5 * 1024 * 1024)
                 {
                     continue;
                 }
 
+                // Loob failile unikaalse nime ja lisab laiendi
                 string uniqueFileName = Guid.NewGuid().ToString()
                     + extension;
 
+                // Ühendab kausta asukoha ja faili nime
                 string filePath = Path.Combine(
                     uploadsFolder,
                     uniqueFileName);
 
+                // Salvestab faili kausta
+                // await ootab, kuni salvestamine on valmis
                 using (var fileStream = new FileStream(
                     filePath, FileMode.Create))
                 {
                     await file.CopyToAsync(fileStream);
                 }
 
+                // Loob pildi andmed andmebaasi jaoks
                 FileToApi path = new FileToApi
                 {
-                    Id = Guid.NewGuid(),
-                    ExistingFilePath = uniqueFileName,
-                    KindergartenId = kindergartenId
+                    Id = Guid.NewGuid(),                // Pildi ID
+                    ExistingFilePath = uniqueFileName, // Faili nimi
+                    KindergartenId = kindergartenId   // Lasteaia ID
                 };
 
+                // Lisab pildi andmed andmebaasi
                 await _context.FileToApis.AddAsync(path);
             }
 
+            // Salvestab muudatused andmebaasis
             await _context.SaveChangesAsync();
         }
 
@@ -183,26 +208,32 @@ namespace TARge25Shop.ApplicationServices.Services
         public async Task RemoveKindergartenImagesAsync(
             Guid kindergartenId)
         {
+            // Otsib kõik pildid, mis kuuluvad sellele lasteaiale
             var images = await _context.FileToApis
                 .Where(x => x.KindergartenId == kindergartenId)
                 .ToListAsync();
 
+            // Käib leitud pildid ükshaaval läbi
             foreach (var image in images)
             {
+                // Leiab pildi asukoha kaustas
                 string filePath = Path.Combine(
                     _webHost.ContentRootPath,
                     "wwwroot",
                     "multipleFileUpload",
                     image.ExistingFilePath ?? "");
 
+                // Kui fail on olemas, kustutab selle kaustast
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
                 }
 
+                // Eemaldab pildi andmed andmebaasist
                 _context.FileToApis.Remove(image);
             }
 
+            // Salvestab muudatused andmebaasis
             await _context.SaveChangesAsync();
         }
     }
