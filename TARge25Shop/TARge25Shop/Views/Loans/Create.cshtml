@@ -2,47 +2,114 @@
 
 @{
     ViewData["Title"] = "Add Loan";
-
     var books = ViewBag.Books as List<Book> ?? new List<Book>();
     var readers = ViewBag.Readers as List<Reader> ?? new List<Reader>();
 }
 
-<h1>Add Loan</h1>
+<style>
+    .loan-form {
+        background: #1c1511;
+        border: 1px solid #806344;
+        border-radius: 6px;
+        padding: 35px;
+        margin: 25px 0;
+        color: #f0dfc8;
+    }
 
-<form asp-action="Create" method="post">
-    <div asp-validation-summary="All" class="text-danger"></div>
+        .loan-form h1 {
+            font: 42px Georgia, serif;
+            color: #f0dfc8;
+            margin-bottom: 30px;
+        }
 
-    <div class="mb-3">
-        <label>Book</label>
-        <select name="bookId" class="form-select" required>
-            <option value="">Select Book</option>
-            @foreach (var book in books)
-            {
-                <option value="@book.Id">
-                    @book.Title - @book.Author
-                </option>
+            .loan-form h1::before {
+                content: "✦ ";
+                color: #c8a46a;
             }
-        </select>
-    </div>
 
-    <div class="mb-3">
-        <label>Reader</label>
-        <select name="readerId" class="form-select" required>
-            <option value="">Select Reader</option>
-            @foreach (var reader in readers)
-            {
-                <option value="@reader.Id">
-                    @reader.FullName
-                </option>
+        .loan-form label {
+            color: #d7b689;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .loan-form .form-select {
+            background-color: #2c211b;
+            color: #f0dfc8;
+            border: 1px solid #705438;
+            padding: 10px;
+        }
+
+            .loan-form .form-select:focus {
+                background-color: #2c211b;
+                color: #f0dfc8;
+                border-color: #c8a46a;
+                box-shadow: none;
             }
-        </select>
-    </div>
 
-    <button type="submit" class="btn btn-success">
-        Save
-    </button>
+        .loan-form .btn {
+            padding: 10px 20px;
+            margin: 3px;
+            color: #f0dfc8;
+        }
 
-    <a asp-action="Index" class="btn btn-secondary">
-        Back
-    </a>
-</form>
+        .loan-form .btn-success {
+            background: #765538;
+            border: 1px solid #a8875a;
+        }
+
+        .loan-form .btn-secondary {
+            background: #30231b;
+            border: 1px solid #8c6a47;
+        }
+
+        .loan-form .btn:hover {
+            background: #b08a57;
+            color: #17110d;
+        }
+</style>
+
+<div class="loan-form">
+    <h1>Add Loan</h1>
+
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+
+        <div asp-validation-summary="All"
+             class="text-danger"></div>
+
+        <div class="mb-3">
+            <label>Book</label>
+            <select name="bookId" class="form-select" required>
+                <option value="">Select Book</option>
+                @foreach (var book in books)
+                {
+                    <option value="@book.Id">
+                        @book.Title - @book.Author
+                    </option>
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Reader</label>
+            <select name="readerId" class="form-select" required>
+                <option value="">Select Reader</option>
+                @foreach (var reader in readers)
+                {
+                    <option value="@reader.Id">
+                        @reader.FullName
+                    </option>
+                }
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-success">
+            Save
+        </button>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Back
+        </a>
+    </form>
+</div>

@@ -31,20 +31,26 @@ namespace TARge25Shop.Controllers
             return View(loans);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Create()
+        {
+            await LoadCreateData();
+            return View();
+        }
+
+        private async Task LoadCreateData()
         {
             ViewBag.Books = (await _bookServices.GetAll())
                 .Where(x => x.IsAvailable)
                 .ToList();
 
             ViewBag.Readers = await _readerServices.GetAll();
-
-            return View();
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Guid bookId, Guid readerId)
+        public async Task<IActionResult> Create(
+            Guid bookId, Guid readerId)
         {
             try
             {
@@ -56,13 +62,7 @@ namespace TARge25Shop.Controllers
                 ex is KeyNotFoundException)
             {
                 ModelState.AddModelError("", ex.Message);
-
-                ViewBag.Books = (await _bookServices.GetAll())
-                    .Where(x => x.IsAvailable)
-                    .ToList();
-
-                ViewBag.Readers = await _readerServices.GetAll();
-
+                await LoadCreateData();
                 return View();
             }
         }
@@ -74,6 +74,82 @@ namespace TARge25Shop.Controllers
             try
             {
                 await _loanServices.ReturnBook(id);
+            }
+            catch (Exception ex) when (
+                ex is InvalidOperationException ||
+                ex is KeyNotFoundException)
+            {
+                TempData["Error"] = ex.Message;
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Details(Guid id)
+        {
+            try
+            {
+                return View(await _loanServices.DetailAsync(id));
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            try
+            {
+                return View(await _loanServices.DetailAsync(id));
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(
+            Guid id, DateTime loanDate)
+        {
+            try
+            {
+                await _loanServices.UpdateLoanDate(id, loanDate);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex) when (
+                ex is InvalidOperationException ||
+                ex is KeyNotFoundException)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            try
+            {
+                return View(await _loanServices.DetailAsync(id));
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        {
+            try
+            {
+                await _loanServices.DeleteReturnedLoan(id);
             }
             catch (Exception ex) when (
                 ex is InvalidOperationException ||

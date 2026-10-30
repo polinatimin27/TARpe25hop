@@ -1,173 +1,64 @@
-﻿
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - TAR25Shop</title>
+﻿@{
+    ViewData["Title"] = "Library";
+}
 
-    <script type="importmap"></script>
+<style>
+    .library-home {
+        background: linear-gradient( rgba(15, 10, 7, 0.50), rgba(15, 10, 7, 0.75) ), url('/images/library-bg.jpg') center/cover;
+        min-height: 650px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 35px;
+    }
 
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/TARge25Shop.styles.css" asp-append-version="true" />
+    .library-frame {
+        border: 1px solid #b08a57;
+        padding: 80px 45px;
+        text-align: center;
+        width: 100%;
+        max-width: 950px;
+    }
 
-    <style>
-            body {
-                background-color: #171519;
-                color: #e9d8bd;
-            }
+        .library-frame h1 {
+            font-family: Georgia, serif;
+            font-size: 55px;
+            color: #f0dfc8;
+            margin-bottom: 35px;
+        }
 
-            .main-navbar {
-                background-color: #171519;
-                border-bottom: 1px solid #65404b;
-                margin-bottom: 25px;
-            }
+    .library-link {
+        display: inline-block;
+        padding: 12px 25px;
+        margin: 5px;
+        border: 1px solid #b08a57;
+        color: #f0dfc8;
+        text-decoration: none;
+        background-color: rgba(28, 19, 14, 0.65);
+    }
 
-                .main-navbar .navbar-brand {
-                    color: #e9d8bd;
-                }
+        .library-link:hover {
+            background-color: #b08a57;
+            color: #17110d;
+        }
+</style>
 
-                    .main-navbar .navbar-brand:hover {
-                        color: #c8a46a;
-                    }
+<div class="library-home">
+    <div class="library-frame">
 
-                    .main-navbar .navbar-brand::before {
-                        content: "✦ ";
-                        color: #c8a46a;
-                    }
+        <h1>The Grand Library</h1>
 
-                .main-navbar .nav-link {
-                    color: #c6b6bc;
-                }
+        <a asp-controller="Books"
+           asp-action="Index"
+           class="library-link">Books</a>
 
-                    .main-navbar .nav-link:hover {
-                        color: #c8a46a;
-                    }
+        <a asp-controller="Readers"
+           asp-action="Index"
+           class="library-link">Readers</a>
 
-                .main-navbar .navbar-toggler {
-                    border-color: #65404b;
-                }
+        <a asp-controller="Loans"
+           asp-action="Index"
+           class="library-link">Loans</a>
 
-                .main-navbar .navbar-toggler-icon {
-                    filter: invert(1);
-                }
-
-            .main-footer {
-                border-top: 1px solid #65404b;
-                color: #b8a6a9;
-                padding-top: 15px;
-                margin-top: 30px;
-            }
-
-                .main-footer a {
-                    color: #c8a46a;
-                }
-
-                    .main-footer a:hover {
-                        color: #e9d8bd;
-                    }
-    </style>
-</head>
-
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm main-navbar">
-            <div class="container-fluid">
-
-                <a class="navbar-brand"
-                       asp-controller="Home"
-                       asp-action="Index">
-                    TAR25Shop
-                </a>
-
-                <button class="navbar-toggler"
-                        type="button"
-                        data-bs-toggle="collapse"
-                        data-bs-target=".navbar-collapse"
-                        aria-controls="navbarSupportedContent"
-                        aria-expanded="false"
-                        aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                                   asp-controller="Home"
-                                   asp-action="Index">
-                                Home
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                                   asp-controller="Home"
-                                   asp-action="Privacy">
-                                Privacy
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                                   asp-controller="Spaceship"
-                                   asp-action="Index">
-                                Spaceship
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                                   asp-controller="RealEstate"
-                                   asp-action="Index">
-                                RealEstate
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                                   asp-controller="Kindergarten"
-                                   asp-action="Index">
-                                Kindergarten
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link"
-                                   asp-controller="Library"
-                                   asp-action="Index">
-                                Library
-                            </a>
-                        </li>
-
-                    </ul>
-                </div>
-            </div>
-        </nav>
-    </header>
-
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
     </div>
-
-    <footer class="main-footer footer">
-        <div class="container">
-            &copy; 2026 - TAR25Shop -
-            <a asp-controller="Home"
-                   asp-action="Privacy">
-                Privacy
-            </a>
-        </div>
-    </footer>
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-
-    @await RenderSectionAsync("Scripts", required: false)
-</body>
-</html>
+</div>

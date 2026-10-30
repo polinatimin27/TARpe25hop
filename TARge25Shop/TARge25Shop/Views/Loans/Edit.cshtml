@@ -1,0 +1,104 @@
+﻿@model TARge25Shop.Core.Domain.Loan
+
+@{
+    ViewData["Title"] = "Edit Loan";
+}
+
+<style>
+    .loan-edit {
+        background: #1c1511;
+        border: 1px solid #806344;
+        border-radius: 6px;
+        padding: 35px;
+        margin: 25px 0;
+        color: #f0dfc8;
+    }
+
+        .loan-edit h1 {
+            font: 42px Georgia, serif;
+            color: #f0dfc8;
+            margin-bottom: 30px;
+        }
+
+            .loan-edit h1::before {
+                content: "✦ ";
+                color: #c8a46a;
+            }
+
+        .loan-edit p,
+        .loan-edit label {
+            color: #f0dfc8;
+            margin-bottom: 12px;
+        }
+
+        .loan-edit strong {
+            color: #d7b689;
+        }
+
+        .loan-edit .form-control {
+            background: #2c211b;
+            border: 1px solid #705438;
+            color: #f0dfc8;
+            padding: 10px;
+            color-scheme: dark;
+        }
+
+            .loan-edit .form-control:focus {
+                background: #2c211b;
+                color: #f0dfc8;
+                border-color: #c8a46a;
+                box-shadow: none;
+            }
+
+        .loan-edit .btn {
+            padding: 10px 20px;
+            margin: 3px;
+            color: #f0dfc8;
+        }
+
+        .loan-edit .btn-success {
+            background: #765538;
+            border: 1px solid #a8875a;
+        }
+
+        .loan-edit .btn-secondary {
+            background: #30231b;
+            border: 1px solid #8c6a47;
+        }
+
+        .loan-edit .btn:hover {
+            background: #b08a57;
+            color: #17110d;
+        }
+</style>
+
+<div class="loan-edit">
+    <h1>Edit Loan</h1>
+
+    <p><strong>Book:</strong> @Model.Book.Title</p>
+    <p><strong>Reader:</strong> @Model.Reader.FullName</p>
+
+    <form asp-action="Edit" method="post">
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" name="id" value="@Model.Id" />
+
+        <div class="mb-3">
+            <label>Loan Date</label>
+            <input type="date"
+                   name="loanDate"
+                   value="@Model.LoanDate.ToString("yyyy-MM-dd")"
+                   class="form-control"
+                   required />
+        </div>
+
+        <button type="submit" class="btn btn-success">
+            Save
+        </button>
+
+        <a asp-action="Index"
+               class="btn btn-secondary">
+            Back
+        </a>
+    </form>
+</div>

@@ -1,0 +1,79 @@
+﻿@model TARge25Shop.Core.Domain.Loan
+
+@{
+    ViewData["Title"] = "Loan Details";
+}
+
+<style>
+    .loan-details {
+        background: #1c1511;
+        border: 1px solid #806344;
+        border-radius: 6px;
+        padding: 35px;
+        margin: 25px 0;
+        color: #f0dfc8;
+    }
+
+        .loan-details h1 {
+            font: 42px Georgia, serif;
+            color: #f0dfc8;
+            margin-bottom: 30px;
+        }
+
+            .loan-details h1::before {
+                content: "✦ ";
+                color: #c8a46a;
+            }
+
+        .loan-details p {
+            color: #f0dfc8;
+            margin-bottom: 18px;
+        }
+
+        .loan-details strong {
+            color: #d7b689;
+        }
+
+        .loan-details .btn {
+            background: #30231b;
+            color: #f0dfc8;
+            border: 1px solid #8c6a47;
+            padding: 10px 20px;
+            margin: 3px;
+        }
+
+        .loan-details .btn-warning {
+            background: #765538;
+        }
+
+        .loan-details .btn:hover {
+            background: #b08a57;
+            color: #17110d;
+        }
+</style>
+
+<div class="loan-details">
+    <h1>Loan Details</h1>
+
+    <p><strong>Book:</strong> @Model.Book.Title</p>
+    <p><strong>Reader:</strong> @Model.Reader.FullName</p>
+    <p>
+        <strong>Loan Date:</strong>
+        @Model.LoanDate.ToString("dd.MM.yyyy")
+    </p>
+    <p>
+        <strong>Return Date:</strong>
+        @(Model.ReturnDate?.ToString("dd.MM.yyyy") ?? "Not returned")
+    </p>
+
+    <a asp-action="Edit"
+           asp-route-id="@Model.Id"
+           class="btn btn-warning">
+        Edit
+    </a>
+
+    <a asp-action="Index"
+           class="btn btn-secondary">
+        Back
+    </a>
+</div>

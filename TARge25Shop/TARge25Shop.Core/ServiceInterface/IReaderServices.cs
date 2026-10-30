@@ -8,5 +8,8 @@ namespace TARge25Shop.Core.ServiceInterface
     {
         Task<Reader> Create(ReaderDto dto);
         Task<List<Reader>> GetAll();
+        Task<Reader> DetailAsync(Guid id);
+        Task<Reader> Update(ReaderDto dto);
+        Task<Reader> Delete(Guid id);
     }
 }

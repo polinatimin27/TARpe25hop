@@ -1,10 +1,199 @@
-﻿@{
-    ViewData["Title"] = "Home";
+﻿@using TARge25Shop.Core.Domain
+@model List<TARge25Shop.Core.Domain.Loan>
+
+@{
+    ViewData["Title"] = "Loans";
+    var readers = ViewBag.Readers as List<Reader>
+        ?? new List<Reader>();
 }
 
-<div class="text-center" style="padding: 100px 20px;">
-    <h1 style="color: #f0dfc8;">Welcome</h1>
-    <p style="color: #cbb59a;">
-        TARge25Shop
-    </p>
+<style>
+    .loans-page {
+        background: #1c1511;
+        border: 1px solid #806344;
+        border-radius: 6px;
+        padding: 30px;
+        margin: 25px 0;
+        color: #f0dfc8;
+    }
+
+        .loans-page h1 {
+            font: 42px Georgia, serif;
+            color: #f0dfc8;
+            margin-bottom: 20px;
+        }
+
+            .loans-page h1::before {
+                content: "✦ ";
+                color: #c8a46a;
+            }
+
+        .loans-page .btn {
+            padding: 9px 16px;
+            margin: 3px;
+            border-radius: 4px;
+            color: #f0dfc8;
+        }
+
+        .loans-page .btn-primary,
+        .loans-page .btn-success {
+            background: #785438;
+            border: 1px solid #a8875a;
+        }
+
+        .loans-page .btn-secondary,
+        .loans-page .btn-warning {
+            background: #30231b;
+            border: 1px solid #8c6a47;
+        }
+
+        .loans-page .btn-info {
+            background: #56402f;
+            border: 1px solid #8c6a47;
+        }
+
+        .loans-page .btn-danger {
+            background: #713b39;
+            border: 1px solid #a16a62;
+        }
+
+        .loans-page .btn:hover {
+            background: #b08a57;
+            color: #17110d;
+        }
+
+        .loans-page .form-select {
+            background-color: #2c211b;
+            color: #f0dfc8;
+            border: 1px solid #705438;
+            padding: 10px;
+        }
+
+        .loans-page .table {
+            --bs-table-bg: #241b16;
+            --bs-table-color: #f0dfc8;
+            --bs-table-border-color: #705438;
+            --bs-table-hover-bg: #382a20;
+            --bs-table-hover-color: #f0dfc8;
+        }
+
+            .loans-page .table th {
+                color: #d7b689;
+                padding: 14px;
+            }
+
+            .loans-page .table td {
+                padding: 12px;
+                vertical-align: middle;
+            }
+
+        .loans-page .btn-sm {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+</style>
+
+<div class="loans-page">
+    <h1>Loans</h1>
+
+    <a asp-controller="Library"
+           asp-action="Index"
+           class="btn btn-secondary mb-3">
+        Back to Library
+    </a>
+
+    <a asp-action="Create"
+           class="btn btn-primary mb-3">
+        Add Loan
+    </a>
+
+    <form method="get" class="mb-3">
+        <select name="readerId" class="form-select mb-2">
+            <option value="">All Readers</option>
+            @foreach (var reader in readers)
+            {
+                <option value="@reader.Id">
+                    @reader.FullName
+                </option>
+            }
+        </select>
+
+        <button type="submit" class="btn btn-primary">
+            Search
+        </button>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            All Loans
+        </a>
+    </form>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Book</th>
+                    <th>Reader</th>
+                    <th>Loan Date</th>
+                    <th>Return Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var loan in Model)
+                {
+                    <tr>
+                        <td>@loan.Book.Title</td>
+                        <td>@loan.Reader.FullName</td>
+                        <td>@loan.LoanDate.ToString("dd.MM.yyyy")</td>
+                        <td>
+                            @(loan.ReturnDate?.ToString("dd.MM.yyyy") ?? "Not returned")
+                        </td>
+                        <td>
+                            <a asp-action="Details"
+                                   asp-route-id="@loan.Id"
+                                   class="btn btn-info btn-sm">
+                                Details
+                            </a>
+
+                            <a asp-action="Edit"
+                                   asp-route-id="@loan.Id"
+                                   class="btn btn-warning btn-sm">
+                                Edit
+                            </a>
+
+                            <a asp-action="Delete"
+                                   asp-route-id="@loan.Id"
+                                   class="btn btn-danger btn-sm">
+                                Delete
+                            </a>
+
+                            @if (!loan.ReturnDate.HasValue)
+                            {
+                                <form asp-action="Return"
+                                      method="post"
+                                      style="display:inline">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden"
+                                           name="id"
+                                           value="@loan.Id" />
+
+                                    <button type="submit"
+                                            class="btn btn-success btn-sm">
+                                        Return
+                                    </button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>

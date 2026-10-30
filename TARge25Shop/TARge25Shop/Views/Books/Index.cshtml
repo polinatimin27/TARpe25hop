@@ -4,63 +4,217 @@
     ViewData["Title"] = "Books";
 }
 
-<h1>Books</h1>
+<style>
+    .books-page {
+        background-color: #1c1511;
+        border: 1px solid #806344;
+        border-radius: 6px;
+        padding: 30px;
+        margin: 25px 0;
+        color: #f0dfc8;
+    }
 
-<a asp-action="Create" class="btn btn-primary mb-3">Add Book</a>
-
-<form method="get" class="mb-3">
-    <input type="text" name="title" placeholder="Book title" />
-    <input type="number" name="year" placeholder="Year" />
-
-    <button type="submit" class="btn btn-primary">Search</button>
-    <button type="submit" name="borrowed" value="true"
-            class="btn btn-warning">
-        Borrowed Books
-    </button>
-
-    <a asp-action="Index" class="btn btn-secondary">All Books</a>
-</form>
-
-@if (TempData["Error"] != null)
-{
-    <div class="alert alert-danger">@TempData["Error"]</div>
-}
-
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th>Title</th>
-            <th>Author</th>
-            <th>Year</th>
-            <th>Available</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var book in Model)
-        {
-            <tr>
-                <td>@book.Title</td>
-                <td>@book.Author</td>
-                <td>@book.PublishedYear</td>
-                <td>@(book.IsAvailable ? "Yes" : "No")</td>
-                <td>
-                    <a asp-action="Edit"
-                       asp-route-id="@book.Id"
-                       class="btn btn-warning btn-sm">Edit</a>
-
-                    <form asp-action="Delete"
-                          asp-route-id="@book.Id"
-                          method="post"
-                          style="display:inline">
-                        @Html.AntiForgeryToken()
-                        <button type="submit"
-                                class="btn btn-danger btn-sm">
-                            Delete
-                        </button>
-                    </form>
-                </td>
-            </tr>
+        .books-page h1 {
+            font-family: Georgia, serif;
+            font-size: 42px;
+            color: #f0dfc8;
+            margin-bottom: 20px;
         }
-    </tbody>
-</table>
+
+            .books-page h1::before {
+                content: "✦ ";
+                color: #c8a46a;
+            }
+
+        .books-page .btn {
+            border-radius: 4px;
+            padding: 9px 16px;
+            margin: 3px 3px 3px 0;
+            color: #f0dfc8;
+        }
+
+        .books-page .btn-primary {
+            background-color: #785438;
+            border: 1px solid #a8875a;
+        }
+
+        .books-page .btn-secondary {
+            background-color: #30231b;
+            border: 1px solid #8c6a47;
+        }
+
+        .books-page .btn-warning {
+            background-color: #765538;
+            border: 1px solid #b08a57;
+        }
+
+        .books-page .btn-info {
+            background-color: #56402f;
+            border: 1px solid #8c6a47;
+        }
+
+        .books-page .btn-danger {
+            background-color: #713b39;
+            border: 1px solid #a16a62;
+        }
+
+        .books-page .btn:hover {
+            background-color: #b08a57;
+            border-color: #c8a46a;
+            color: #17110d;
+        }
+
+    .books-search {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 20px 0;
+    }
+
+    .books-page .form-control {
+        background-color: #2c211b;
+        border: 1px solid #705438;
+        color: #f0dfc8;
+        width: 190px;
+        padding: 10px;
+    }
+
+        .books-page .form-control::placeholder {
+            color: #bba58b;
+        }
+
+        .books-page .form-control:focus {
+            background-color: #2c211b;
+            color: #f0dfc8;
+            border-color: #c8a46a;
+            box-shadow: none;
+        }
+
+    .books-page .table {
+        --bs-table-bg: #241b16;
+        --bs-table-color: #f0dfc8;
+        --bs-table-border-color: #705438;
+        --bs-table-hover-bg: #382a20;
+        --bs-table-hover-color: #f0dfc8;
+    }
+
+        .books-page .table th {
+            color: #d7b689;
+            padding: 14px;
+        }
+
+        .books-page .table td {
+            padding: 12px 14px;
+            vertical-align: middle;
+        }
+
+        .books-page .table .btn-sm {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+
+    .books-page .table-responsive {
+        margin-top: 20px;
+    }
+</style>
+
+<div class="books-page">
+
+    <h1>Books</h1>
+
+    <a asp-controller="Library"
+           asp-action="Index"
+           class="btn btn-secondary mb-3">
+        Back to Library
+    </a>
+
+    <a asp-action="Create"
+           class="btn btn-primary mb-3">
+        Add Book
+    </a>
+
+    <form method="get" class="books-search">
+
+        <input type="text"
+               name="title"
+               class="form-control"
+               placeholder="Book title" />
+
+        <input type="number"
+               name="year"
+               class="form-control"
+               placeholder="Year" />
+
+        <button type="submit"
+                class="btn btn-primary">
+            Search
+        </button>
+
+        <button type="submit"
+                name="borrowed"
+                value="true"
+                class="btn btn-warning">
+            Borrowed Books
+        </button>
+
+        <a asp-action="Index"
+               class="btn btn-secondary">
+            All Books
+        </a>
+    </form>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>Year</th>
+                    <th>Available</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var book in Model)
+                {
+                    <tr>
+                        <td>@book.Title</td>
+                        <td>@book.Author</td>
+                        <td>@book.PublishedYear</td>
+                        <td>
+                            @(book.IsAvailable ? "Yes" : "No")
+                        </td>
+                        <td>
+                            <a asp-action="Details"
+                                   asp-route-id="@book.Id"
+                                   class="btn btn-info btn-sm">
+                                Details
+                            </a>
+
+                            <a asp-action="Edit"
+                                   asp-route-id="@book.Id"
+                                   class="btn btn-warning btn-sm">
+                                Edit
+                            </a>
+
+                            <a asp-action="Delete"
+                                   asp-route-id="@book.Id"
+                                   class="btn btn-danger btn-sm">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

@@ -1,0 +1,88 @@
+﻿@model TARge25Shop.Core.Domain.Book
+
+@{
+    ViewData["Title"] = "Delete Book";
+}
+
+<style>
+    .book-delete {
+        background-color: #1c1511;
+        border: 1px solid #806344;
+        border-radius: 6px;
+        padding: 35px;
+        margin: 25px 0;
+        color: #f0dfc8;
+    }
+
+        .book-delete h1 {
+            font-family: Georgia, serif;
+            font-size: 42px;
+            color: #f0dfc8;
+            margin-bottom: 30px;
+        }
+
+            .book-delete h1::before {
+                content: "✦ ";
+                color: #c8a46a;
+            }
+
+        .book-delete p {
+            color: #f0dfc8;
+            margin-bottom: 18px;
+            font-size: 16px;
+        }
+
+        .book-delete strong {
+            color: #d7b689;
+        }
+
+        .book-delete .btn {
+            border-radius: 4px;
+            padding: 10px 20px;
+            margin: 3px;
+        }
+
+        .book-delete .btn-danger {
+            background-color: #713b39;
+            border: 1px solid #a16a62;
+            color: #fff4e4;
+        }
+
+        .book-delete .btn-secondary {
+            background-color: #30231b;
+            border: 1px solid #8c6a47;
+            color: #f0dfc8;
+        }
+
+        .book-delete .btn:hover {
+            background-color: #b08a57;
+            border-color: #c8a46a;
+            color: #17110d;
+        }
+</style>
+
+<div class="book-delete">
+
+    <h1>Delete Book</h1>
+
+    <p>Are you sure you want to delete this book?</p>
+
+    <p><strong>Title:</strong> @Model.Title</p>
+    <p><strong>Author:</strong> @Model.Author</p>
+    <p><strong>Year:</strong> @Model.PublishedYear</p>
+
+    <form asp-action="DeleteConfirmed" method="post">
+        @Html.AntiForgeryToken()
+
+        <input type="hidden" name="id" value="@Model.Id" />
+
+        <button type="submit" class="btn btn-danger">
+            Delete
+        </button>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Back
+        </a>
+    </form>
+
+</div>

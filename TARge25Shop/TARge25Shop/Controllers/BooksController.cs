@@ -14,7 +14,8 @@ namespace TARge25Shop.Controllers
             _bookServices = bookServices;
         }
 
-        public async Task<IActionResult> Index(int? year, string? title, bool borrowed = false)
+        public async Task<IActionResult> Index(
+            int? year, string? title, bool borrowed = false)
         {
             var books = borrowed
                 ? await _bookServices.GetBorrowedBooks()
@@ -22,13 +23,15 @@ namespace TARge25Shop.Controllers
                     ? await _bookServices.GetByYear(year.Value)
                     : !string.IsNullOrWhiteSpace(title)
                         ? (await _bookServices.GetAll())
-                            .Where(x => x.Title.Contains(title, StringComparison.OrdinalIgnoreCase))
+                            .Where(x => x.Title.Contains(
+                                title, StringComparison.OrdinalIgnoreCase))
                             .ToList()
                         : await _bookServices.GetAll();
 
             return View(books);
         }
 
+        [HttpGet]
         public IActionResult Create()
         {
             return View(new BookDto());
@@ -50,17 +53,40 @@ namespace TARge25Shop.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
+        public async Task<IActionResult> Details(Guid id)
+        {
+            try
+            {
+                var book = await _bookServices.DetailAsync(id);
+                return View(book);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpGet]
         public async Task<IActionResult> Edit(Guid id)
         {
-            var book = await _bookServices.DetailAsync(id);
-
-            return View(new BookDto
+            try
             {
-                Id = book.Id,
-                Title = book.Title,
-                Author = book.Author,
-                PublishedYear = book.PublishedYear
-            });
+                var book = await _bookServices.DetailAsync(id);
+
+                return View(new BookDto
+                {
+                    Id = book.Id,
+                    Title = book.Title,
+                    Author = book.Author,
+                    PublishedYear = book.PublishedYear
+                });
+            }
+            catch (KeyNotFoundException)
+            {
+                TempData["Error"] = "Book not found.";
+                return RedirectToAction(nameof(Index));
+            }
         }
 
         [HttpPost]
@@ -76,13 +102,35 @@ namespace TARge25Shop.Controllers
                 return View(dto);
             }
 
-            await _bookServices.Update(dto);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _bookServices.Update(dto);
+                return RedirectToAction(nameof(Index));
+            }
+            catch (KeyNotFoundException)
+            {
+                TempData["Error"] = "Book not found.";
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            try
+            {
+                var book = await _bookServices.DetailAsync(id);
+                return View(book);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
             try
             {
@@ -90,7 +138,12 @@ namespace TARge25Shop.Controllers
             }
             catch (InvalidOperationException)
             {
-                TempData["Error"] = "Book has loan history and cannot be deleted.";
+                TempData["Error"] =
+                    "Book has loan history and cannot be deleted.";
+            }
+            catch (KeyNotFoundException)
+            {
+                TempData["Error"] = "Book not found.";
             }
 
             return RedirectToAction(nameof(Index));

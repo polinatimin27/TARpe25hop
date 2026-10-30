@@ -1,0 +1,99 @@
+﻿@model TARge25Shop.Core.Domain.Loan
+
+@{
+    ViewData["Title"] = "Delete Loan";
+}
+
+<style>
+    .loan-delete {
+        background: #1c1511;
+        border: 1px solid #806344;
+        border-radius: 6px;
+        padding: 35px;
+        margin: 25px 0;
+        color: #f0dfc8;
+    }
+
+        .loan-delete h1 {
+            font: 42px Georgia, serif;
+            color: #f0dfc8;
+            margin-bottom: 30px;
+        }
+
+            .loan-delete h1::before {
+                content: "✦ ";
+                color: #c8a46a;
+            }
+
+        .loan-delete p {
+            color: #f0dfc8;
+            margin-bottom: 18px;
+        }
+
+        .loan-delete strong {
+            color: #d7b689;
+        }
+
+        .loan-delete .btn {
+            padding: 10px 20px;
+            margin: 3px;
+            color: #f0dfc8;
+        }
+
+        .loan-delete .btn-danger {
+            background: #713b39;
+            border: 1px solid #a16a62;
+        }
+
+        .loan-delete .btn-secondary {
+            background: #30231b;
+            border: 1px solid #8c6a47;
+        }
+
+        .loan-delete .btn:hover {
+            background: #b08a57;
+            color: #17110d;
+        }
+</style>
+
+<div class="loan-delete">
+    <h1>Delete Loan</h1>
+
+    <p>Are you sure you want to delete this loan?</p>
+
+    <p><strong>Book:</strong> @Model.Book.Title</p>
+    <p><strong>Reader:</strong> @Model.Reader.FullName</p>
+    <p>
+        <strong>Return Date:</strong>
+        @(Model.ReturnDate?.ToString("dd.MM.yyyy") ?? "Not returned")
+    </p>
+
+    @if (Model.ReturnDate.HasValue)
+    {
+        <form asp-action="DeleteConfirmed" method="post">
+            @Html.AntiForgeryToken()
+
+            <input type="hidden" name="id" value="@Model.Id" />
+
+            <button type="submit" class="btn btn-danger">
+                Delete
+            </button>
+
+            <a asp-action="Index"
+                   class="btn btn-secondary">
+                Back
+            </a>
+        </form>
+    }
+    else
+    {
+        <p style="color: #e7bd7d;">
+            Return the book before deleting this loan.
+        </p>
+
+        <a asp-action="Index"
+               class="btn btn-secondary">
+            Back
+        </a>
+    }
+</div>

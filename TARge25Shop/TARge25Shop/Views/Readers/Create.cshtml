@@ -4,27 +4,104 @@
     ViewData["Title"] = "Add Reader";
 }
 
-<h1>Add Reader</h1>
+<style>
+    .reader-form {
+        background: #1c1511;
+        border: 1px solid #806344;
+        border-radius: 6px;
+        padding: 35px;
+        margin: 25px 0;
+        color: #f0dfc8;
+    }
 
-<form asp-action="Create" method="post">
-    <div asp-validation-summary="All" class="text-danger"></div>
+        .reader-form h1 {
+            font: 42px Georgia, serif;
+            color: #f0dfc8;
+            margin-bottom: 30px;
+        }
 
-    <div class="mb-3">
-        <label>Full Name</label>
-        <input asp-for="FullName" class="form-control" required />
-    </div>
+            .reader-form h1::before {
+                content: "✦ ";
+                color: #c8a46a;
+            }
 
-    <div class="mb-3">
-        <label>Email</label>
-        <input asp-for="Email" type="email"
-               class="form-control" required />
-    </div>
+        .reader-form label,
+        .reader-form strong {
+            color: #d7b689;
+            margin-bottom: 8px;
+        }
 
-    <button type="submit" class="btn btn-success">
-        Save
-    </button>
+        .reader-form .form-control {
+            background: #2c211b;
+            color: #f0dfc8;
+            border: 1px solid #705438;
+            padding: 10px;
+        }
 
-    <a asp-action="Index" class="btn btn-secondary">
-        Back
-    </a>
-</form>
+            .reader-form .form-control:focus {
+                background: #2c211b;
+                color: #f0dfc8;
+                border-color: #c8a46a;
+                box-shadow: none;
+            }
+
+        .reader-form .btn {
+            padding: 10px 20px;
+            border-radius: 4px;
+            margin: 3px;
+            color: #f0dfc8;
+        }
+
+        .reader-form .btn-success {
+            background: #765538;
+            border: 1px solid #a8875a;
+        }
+
+        .reader-form .btn-secondary {
+            background: #30231b;
+            border: 1px solid #8c6a47;
+        }
+
+        .reader-form .btn:hover {
+            background: #b08a57;
+            color: #17110d;
+        }
+</style>
+
+<div class="reader-form">
+    <h1>Add Reader</h1>
+
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+
+        <div asp-validation-summary="All"
+             class="text-danger"></div>
+
+        <div class="mb-3">
+            <label>Full Name</label>
+            <input asp-for="FullName"
+                   class="form-control" required />
+        </div>
+
+        <div class="mb-3">
+            <label>Email</label>
+            <input asp-for="Email"
+                   type="email"
+                   class="form-control" required />
+        </div>
+
+        <button type="submit" class="btn btn-success">
+            Save
+        </button>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Back
+        </a>
+
+        <a asp-controller="Library"
+               asp-action="Index"
+               class="btn btn-secondary">
+            Back to Library
+        </a>
+    </form>
+</div>

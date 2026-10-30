@@ -4,26 +4,144 @@
     ViewData["Title"] = "Readers";
 }
 
-<h1>Readers</h1>
+<style>
+    .readers-page {
+        background-color: #1c1511;
+        border: 1px solid #806344;
+        border-radius: 6px;
+        padding: 30px;
+        margin: 25px 0;
+        color: #f0dfc8;
+    }
 
-<a asp-action="Create" class="btn btn-primary mb-3">
-    Add Reader
-</a>
-
-<table class="table table-hover">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Email</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var reader in Model)
-        {
-            <tr>
-                <td>@reader.FullName</td>
-                <td>@reader.Email</td>
-            </tr>
+        .readers-page h1 {
+            font-family: Georgia, serif;
+            font-size: 42px;
+            color: #f0dfc8;
+            margin-bottom: 20px;
         }
-    </tbody>
-</table>
+
+            .readers-page h1::before {
+                content: "✦ ";
+                color: #c8a46a;
+            }
+
+        .readers-page .btn {
+            border-radius: 4px;
+            padding: 9px 16px;
+            margin: 3px 3px 3px 0;
+            color: #f0dfc8;
+        }
+
+        .readers-page .btn-primary {
+            background-color: #785438;
+            border: 1px solid #a8875a;
+        }
+
+        .readers-page .btn-secondary,
+        .readers-page .btn-warning {
+            background-color: #30231b;
+            border: 1px solid #8c6a47;
+        }
+
+        .readers-page .btn-info {
+            background-color: #56402f;
+            border: 1px solid #8c6a47;
+        }
+
+        .readers-page .btn-danger {
+            background-color: #713b39;
+            border: 1px solid #a16a62;
+        }
+
+        .readers-page .btn:hover {
+            background-color: #b08a57;
+            border-color: #c8a46a;
+            color: #17110d;
+        }
+
+        .readers-page .table {
+            --bs-table-bg: #241b16;
+            --bs-table-color: #f0dfc8;
+            --bs-table-border-color: #705438;
+            --bs-table-hover-bg: #382a20;
+            --bs-table-hover-color: #f0dfc8;
+        }
+
+            .readers-page .table th {
+                color: #d7b689;
+                padding: 14px;
+            }
+
+            .readers-page .table td {
+                padding: 12px 14px;
+                vertical-align: middle;
+            }
+
+        .readers-page .btn-sm {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+</style>
+
+<div class="readers-page">
+    <h1>Readers</h1>
+
+    <a asp-controller="Library"
+           asp-action="Index"
+           class="btn btn-secondary mb-3">
+        Back to Library
+    </a>
+
+    <a asp-action="Create"
+           class="btn btn-primary mb-3">
+        Add Reader
+    </a>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["Error"]
+        </div>
+    }
+
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var reader in Model)
+                {
+                    <tr>
+                        <td>@reader.FullName</td>
+                        <td>@reader.Email</td>
+                        <td>
+                            <a asp-action="Details"
+                                   asp-route-id="@reader.Id"
+                                   class="btn btn-info btn-sm">
+                                Details
+                            </a>
+
+                            <a asp-action="Edit"
+                                   asp-route-id="@reader.Id"
+                                   class="btn btn-warning btn-sm">
+                                Edit
+                            </a>
+
+                            <a asp-action="Delete"
+                                   asp-route-id="@reader.Id"
+                                   class="btn btn-danger btn-sm">
+                                Delete
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

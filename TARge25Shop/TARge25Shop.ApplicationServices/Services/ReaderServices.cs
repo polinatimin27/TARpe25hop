@@ -35,5 +35,54 @@ namespace TARge25Shop.ApplicationServices.Services
         {
             return await _context.Readers.ToListAsync();
         }
+
+        public async Task<Reader> DetailAsync(Guid id)
+        {
+            var reader = await _context.Readers
+                .FirstOrDefaultAsync(x => x.Id == id);
+
+            if (reader == null)
+            {
+                throw new KeyNotFoundException("Reader not found.");
+            }
+
+            return reader;
+        }
+
+        public async Task<Reader> Update(ReaderDto dto)
+        {
+            if (!dto.Id.HasValue)
+            {
+                throw new ArgumentException("Reader ID is required.");
+            }
+
+            var reader = await DetailAsync(dto.Id.Value);
+
+            reader.FullName = dto.FullName;
+            reader.Email = dto.Email;
+
+            await _context.SaveChangesAsync();
+
+            return reader;
+        }
+
+        public async Task<Reader> Delete(Guid id)
+        {
+            var reader = await DetailAsync(id);
+
+            bool hasLoans = await _context.Loans
+                .AnyAsync(x => x.ReaderId == id);
+
+            if (hasLoans)
+            {
+                throw new InvalidOperationException(
+                    "Reader has loan history and cannot be deleted.");
+            }
+
+            _context.Readers.Remove(reader);
+            await _context.SaveChangesAsync();
+
+            return reader;
+        }
     }
 }

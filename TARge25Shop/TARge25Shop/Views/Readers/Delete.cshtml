@@ -1,0 +1,79 @@
+﻿@model TARge25Shop.Core.Domain.Reader
+
+@{
+    ViewData["Title"] = "Delete Reader";
+}
+
+<style>
+    .reader-delete {
+        background: #1c1511;
+        border: 1px solid #806344;
+        border-radius: 6px;
+        padding: 35px;
+        margin: 25px 0;
+        color: #f0dfc8;
+    }
+
+        .reader-delete h1 {
+            font: 42px Georgia, serif;
+            color: #f0dfc8;
+            margin-bottom: 30px;
+        }
+
+            .reader-delete h1::before {
+                content: "✦ ";
+                color: #c8a46a;
+            }
+
+        .reader-delete p {
+            color: #f0dfc8;
+            margin-bottom: 18px;
+        }
+
+        .reader-delete strong {
+            color: #d7b689;
+        }
+
+        .reader-delete .btn {
+            padding: 10px 20px;
+            margin: 3px;
+            color: #f0dfc8;
+        }
+
+        .reader-delete .btn-danger {
+            background: #713b39;
+            border: 1px solid #a16a62;
+        }
+
+        .reader-delete .btn-secondary {
+            background: #30231b;
+            border: 1px solid #8c6a47;
+        }
+
+        .reader-delete .btn:hover {
+            background: #b08a57;
+            color: #17110d;
+        }
+</style>
+
+<div class="reader-delete">
+    <h1>Delete Reader</h1>
+
+    <p>Are you sure you want to delete this reader?</p>
+
+    <p><strong>Name:</strong> @Model.FullName</p>
+    <p><strong>Email:</strong> @Model.Email</p>
+
+    <form asp-action="DeleteConfirmed" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@Model.Id" />
+
+        <button type="submit" class="btn btn-danger">
+            Delete
+        </button>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Back
+        </a>
+    </form>
+</div>

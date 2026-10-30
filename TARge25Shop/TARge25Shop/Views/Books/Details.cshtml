@@ -1,0 +1,87 @@
+﻿@model TARge25Shop.Core.Domain.Book
+
+@{
+    ViewData["Title"] = "Book Details";
+}
+
+<style>
+    .book-details {
+        background-color: #1c1511;
+        border: 1px solid #806344;
+        border-radius: 6px;
+        padding: 35px;
+        margin: 25px 0;
+        color: #f0dfc8;
+    }
+
+        .book-details h1 {
+            font-family: Georgia, serif;
+            font-size: 42px;
+            color: #f0dfc8;
+            margin-bottom: 30px;
+        }
+
+            .book-details h1::before {
+                content: "✦ ";
+                color: #c8a46a;
+            }
+
+        .book-details p {
+            color: #f0dfc8;
+            margin-bottom: 18px;
+            font-size: 16px;
+        }
+
+        .book-details strong {
+            color: #d7b689;
+        }
+
+        .book-details .btn {
+            border-radius: 4px;
+            padding: 10px 20px;
+            margin: 3px;
+        }
+
+        .book-details .btn-warning {
+            background-color: #765538;
+            border: 1px solid #a8875a;
+            color: #fff4e4;
+        }
+
+        .book-details .btn-secondary {
+            background-color: #30231b;
+            border: 1px solid #8c6a47;
+            color: #f0dfc8;
+        }
+
+        .book-details .btn:hover {
+            background-color: #b08a57;
+            border-color: #c8a46a;
+            color: #17110d;
+        }
+</style>
+
+<div class="book-details">
+
+    <h1>Book Details</h1>
+
+    <p><strong>Title:</strong> @Model.Title</p>
+    <p><strong>Author:</strong> @Model.Author</p>
+    <p><strong>Year:</strong> @Model.PublishedYear</p>
+    <p>
+        <strong>Available:</strong>
+        @(Model.IsAvailable ? "Yes" : "No")
+    </p>
+
+    <a asp-action="Edit"
+           asp-route-id="@Model.Id"
+           class="btn btn-warning">
+        Edit
+    </a>
+
+    <a asp-action="Index"
+           class="btn btn-secondary">
+        Back
+    </a>
+
+</div>
